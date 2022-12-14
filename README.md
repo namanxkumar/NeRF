@@ -1,11 +1,19 @@
 # NeRF
  From scratch implementation of the original NeRF paper in PyTorch
 
- - [ ] Dataloader
+ - [x] Dataloader
     - [x] Load Data
     - [x] Get rays form pinhole camera model
-- [ ] Model
-
+- [x] Model
+    - [x] Encoding
+    - [x] Implementation
+- [ ] Volume Rendering
+    - [ ] Volume Integration
+    - [ ] Heirarchical Volume Sampling
+- [ ] Training
+    - [ ] Forward Pass
+    - [ ] Batching Camera Rays
+    - [ ]
 
 ## How the get_rays() function works
 1. A meshgrid is created with arrays of size height and width (in pixels) of the image as input. The meshgrid essentially creates 2 matrices, which taken element wise pairs from comes out to be cartesian coordinates such as (0,1), (0,2), ... (1, 3), (1, 4) ... and so on. If the meshgrid indexing is 'xy' then the coordinates are taken by looping over the height pixels first, i.e. (h1, w0), (h2, w0), (h3, w0) ... will be the first row and then width pixel is incremented. In case of 'ij' indexing, width pixels are taken first. We take 'xy' indexing.
