@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from typing import Optional, Tuple, List, Union, Callable
+import torch
 
 
 class Dataloader():
@@ -39,8 +40,15 @@ class Dataloader():
         figure.set_zlabel('Z')
         plt.show()
     
-    def get_rays(self):
-        pass
+    def get_rays(self, image_index: int):
+        x_coordinates, y_coordinates = torch.meshgrid(torch.arange(self.width, dtype=torch.float32), torch.arange(100, dtype=torch.float32), indexing='xy') # make a grid of x and y coordinates of the pixels
+        directions = torch.stack([(x_coordinates-self.width/2)/self.focal, -(y_coordinates-self.height/2)/self.focal, -torch.ones_like(x_coordinates)], dim=-1) # calculate the direction of the rays, this matrix multiplied with distance form optical center, w, will give the u, v, w coordinates in world space
+        # Shape of directions: (width, height, 3)
+
+        rays_directions = torch.sum(directions[..., None, :] * self.poses[image_index, :3, :3], -1) # multiply the direction of the rays with the rotation matrix of the camera to get the direction of the rays in world space
+        rays_origin = self.poses[image_index, :3, -1] # get the origin of the camera in world space
+
+        return rays_origin, rays_directions
 
 if __name__ == '__main__':
     dataloader = Dataloader()
